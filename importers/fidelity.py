@@ -33,17 +33,13 @@ class BrokerageImporter(importer.ImporterProtocol):
 
 
     def identify(self, f):
-        # til March 2025
-        # return re.match(''.join(['History_for_Account_Z.*', self.last_four, '\.csv$']), os.path.basename(f.name))
-        # March 2025 onwards
-        return re.match('^Accounts_History\.csv$', os.path.basename(f.name))
+        return re.match(''.join(['History_for_Account_Z.*', self.last_four, '\.csv$']), os.path.basename(f.name))
 
 
     def extract(self, f):
         entries = []
 
-        # til March 2025: Trade Date, Settlement Date, Account, Description, Type, Symbol/ CUSIP, Quantity, Price, Amount
-        # 2025 update: Run Date,Account,Account Number,Action,Symbol,Description,Type,Exchange Quantity,Exchange Currency,Quantity,Currency,Price,Exchange Rate,Commission,Fees,Accrued Interest,Amount,Settlement Date
+        # Trade Date, Settlement Date, Account, Description, Type, Symbol/ CUSIP, Quantity, Price, Amount
         with open(f.name) as f:
             for _ in range(2): # skip first 2 lines
                 f.readline()
@@ -57,7 +53,7 @@ class BrokerageImporter(importer.ImporterProtocol):
                     break
 
                 action  = row['Action']
-                trans_amt  = row['Amount']
+                trans_amt  = row['Amount ($)']
 
 
                 meta = data.new_metadata(f.name, index)
